@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chat365 — Never Miss a Customer Enquiry, Day or Night</title>
+<meta name="description" content="chat365 answers your customers on webchat, WhatsApp, Facebook and the phone — 24/7, so you never miss another enquiry.">
+<meta name="theme-color" content="#2563eb">
+<style>
+  :root{
+    --ink:#0f172a;
+    --ink-soft:#475569;
+    --muted:#94a3b8;
+    --bg:#ffffff;
+    --bg-alt:#f8fafc;
+    --brand:#2563eb;       /* primary blue, matched from heyjodie.com's theme-color */
+    --brand-dark:#1d4ed8;
+    --brand-light:#eff6ff;
+    --brand-tint:#dbeafe;
+    --accent:#f97316;
+    --border:#e2e8f0;
+    --radius:16px;
+    --max:1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    line-height:1.55;
+  }
+  a{color:var(--brand);}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px;}
+
+  /* Header */
+  header{
+    position:sticky; top:0; z-index:20;
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:var(--max); margin:0 auto;}
+
+  .logo{display:flex; align-items:center; gap:10px; font-weight:800; font-size:19px; letter-spacing:-0.02em; color:var(--ink); text-decoration:none;}
+  .logo img{height:96px; width:auto; display:block;}
+
+  .nav-links{display:flex; gap:28px; font-size:15px; font-weight:600; color:var(--ink-soft);}
+  .nav-links a{text-decoration:none; color:inherit;}
+  .nav-links a:hover{color:var(--brand);}
+  .nav-right{display:flex; align-items:center; gap:18px;}
+  .nav-cta{
+    background:var(--brand); color:#fff; padding:10px 22px; border-radius:999px;
+    font-weight:700; font-size:14px; text-decoration:none;
+  }
+  .nav-cta:hover{background:var(--brand-dark);}
+
+  /* Hero */
+  .hero{padding:80px 0 56px; text-align:center; background:
+      radial-gradient(700px 340px at 50% -12%, var(--brand-tint), transparent 65%);
+  }
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--brand-light); color:var(--brand);
+    font-size:13px; font-weight:700; padding:6px 14px; border-radius:999px;
+    margin-bottom:22px;
+  }
+  .badge-dot{width:7px; height:7px; border-radius:50%; background:var(--brand); box-shadow:0 0 0 3px var(--brand-tint);}
+  h1{
+    font-size:clamp(34px, 5.2vw, 56px);
+    line-height:1.06;
+    letter-spacing:-0.03em;
+    margin:0 auto 20px;
+    max-width:780px;
+  }
+  .lede{font-size:19px; color:var(--ink-soft); max-width:600px; margin:0 auto 30px;}
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px; justify-content:center;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:15px 28px; border-radius:999px; font-weight:700; font-size:15px;
+    text-decoration:none; border:1px solid transparent; cursor:pointer;
+  }
+  .btn-primary{background:var(--brand); color:#fff;}
+  .btn-primary:hover{background:var(--brand-dark);}
+  .btn-ghost{background:#fff; color:var(--ink); border-color:var(--border);}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .fine-print{font-size:13px; color:var(--muted);}
+
+  /* Channel strip */
+  .channels{padding:32px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--bg-alt);}
+  .channels-inner{display:flex; flex-wrap:wrap; gap:28px; align-items:center; justify-content:center;}
+  .channels-label{font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);}
+  .channel-icons{display:flex; gap:26px; flex-wrap:wrap; font-size:15px; font-weight:700; color:var(--ink-soft); justify-content:center;}
+  .channel-icons span{display:flex; align-items:center; gap:8px;}
+
+  /* Section shell */
+  section{padding:88px 0;}
+  .section-head{text-align:center; max-width:640px; margin:0 auto 52px;}
+  .eyebrow{font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--brand); margin-bottom:12px;}
+  h2{font-size:clamp(26px,3.2vw,38px); letter-spacing:-0.02em; margin:0 0 14px;}
+  .section-lede{color:var(--ink-soft); font-size:17px; margin:0;}
+
+  /* How it works — numbered steps with mock-up cards, styled after heyjodie.com's step visuals */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .step{background:var(--bg-alt); border:1px solid var(--border); border-radius:var(--radius); padding:26px; display:flex; flex-direction:column; gap:16px;}
+  .step-top{display:flex; align-items:center; gap:12px;}
+  .step-num{
+    width:30px; height:30px; border-radius:50%; background:var(--brand); color:#fff; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px;
+  }
+  .step h3{font-size:17px; margin:0;}
+  .step p{color:var(--ink-soft); font-size:14px; margin:0;}
+  .mock{
+    background:#fff; border:1px solid var(--border); border-radius:12px; padding:14px 16px;
+    font-size:13px; color:var(--ink-soft);
+  }
+  .mock-row{display:flex; justify-content:space-between; align-items:center; gap:8px;}
+  .mock-dot{width:8px; height:8px; border-radius:50%; background:#22c55e; display:inline-block; margin-right:6px;}
+  .mock-bar{height:6px; border-radius:4px; background:var(--brand-tint); margin-top:8px; overflow:hidden;}
+  .mock-bar-fill{height:100%; width:70%; background:var(--brand); border-radius:4px;}
+
+  /* Features */
+  .features{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .feature{padding:26px; border-radius:var(--radius); border:1px solid var(--border); background:#fff;}
+  .feature-icon{
+    width:42px; height:42px; border-radius:11px; background:var(--brand-light); color:var(--brand);
+    display:flex; align-items:center; justify-content:center; font-size:19px; margin-bottom:14px;
+  }
+  .feature h3{font-size:16px; margin:0 0 6px;}
+  .feature p{font-size:14px; color:var(--ink-soft); margin:0;}
+
+  /* FAQ */
+  .faq{max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:12px;}
+  .faq-item{border:1px solid var(--border); border-radius:12px; padding:18px 22px;}
+  .faq-item h3{font-size:15px; margin:0 0 6px;}
+  .faq-item p{font-size:14px; color:var(--ink-soft); margin:0;}
+
+  /* CTA band */
+  .cta-band{
+    background:linear-gradient(135deg, var(--brand), #1e3fae);
+    color:#fff; border-radius:24px; padding:56px 48px;
+    display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap;
+  }
+  .cta-band h2{color:#fff; margin-bottom:8px;}
+  .cta-band p{color:#dbeafe; margin:0; max-width:420px;}
+  .cta-band .btn-primary{background:#fff; color:var(--brand);}
+  .cta-band .btn-primary:hover{background:var(--brand-light);}
+
+  /* Placeholder notice */
+  .placeholder-notice{
+    background:#fff7ed; border:1px dashed var(--accent); color:#9a3412;
+    border-radius:12px; padding:16px 20px; font-size:14px; margin:0 0 40px; text-align:left;
+  }
+  .placeholder-notice strong{display:block; margin-bottom:2px;}
+
+  footer{border-top:1px solid var(--border); padding:48px 0; background:var(--bg-alt);}
+  .footer-inner{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; font-size:13px; color:var(--muted);}
+  .footer-links{display:flex; gap:20px;}
+  .footer-links a{color:var(--muted); text-decoration:none;}
+  .footer-links a:hover{color:var(--ink);}
+
+  @media (max-width:860px){
+    .steps, .features{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .cta-band{padding:36px 24px;}
+    .hero{padding:56px 0 40px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="#top">
+      <img src="assets/logo.png" alt="chat365">
+    </a>
+    <nav class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <a class="nav-cta" href="#contact">Get in touch</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="placeholder-notice">
+        <strong>Starter template — not final content.</strong>
+        Design and colour palette are adapted from heyjodie.com/en-au (primary blue #2563eb, card-based layout). Copy and pricing are still placeholders.
+      </div>
+
+      <span class="badge"><span class="badge-dot"></span>Now taking early customers</span>
+      <h1>The AI receptionist for busy Australian small businesses.</h1>
+      <p class="lede">chat365 answers your calls, website chat, WhatsApp and Facebook messages, day or night, 365 days a year, and sends the details straight to you. No more missed enquiries.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#contact">Get in touch</a>
+        <a class="btn btn-ghost" href="#how-it-works">See how it works</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="channels">
+    <div class="wrap channels-inner">
+      <span class="channels-label">Works across every channel your customers already use</span>
+      <div class="channel-icons">
+        <span>💬 Webchat</span>
+        <span>🟢 WhatsApp</span>
+        <span>📘 Facebook</span>
+        <span>📞 Phone</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="how-it-works">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2>Set up once, answered from then on</h2>
+        <p class="section-lede">No new hardware, no complicated setup — chat365 plugs into the channels you already use.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-top">
+            <div class="step-num">1</div>
+            <h3>Tell chat365 about your business</h3>
+          </div>
+          <p>Share your website or a quick summary of your services, hours and how you'd like enquiries handled.</p>
+          <div class="mock">
+            <div class="mock-row"><span><span class="mock-dot"></span>Learning your business</span><span>●●●</span></div>
+            <div class="mock-bar"><div class="mock-bar-fill"></div></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-top">
+            <div class="step-num">2</div>
+            <h3>Connect your channels</h3>
+          </div>
+          <p>Add the webchat widget, connect WhatsApp and Facebook, and get your dedicated chat365 phone number — as many channels as you need.</p>
+          <div class="mock">
+            <div class="mock-row"><span>Webchat</span><span style="color:#16a34a;font-weight:700;">Connected</span></div>
+            <div class="mock-row" style="margin-top:6px;"><span>WhatsApp</span><span style="color:#16a34a;font-weight:700;">Connected</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-top">
+            <div class="step-num">3</div>
+            <h3>Enquiries handled automatically</h3>
+          </div>
+          <p>Every conversation is answered, qualified, and — where connected — booked straight into your calendar and CRM.</p>
+          <div class="mock">
+            <div class="mock-row"><span>New enquiry</span><span class="tag" style="color:var(--brand);font-weight:700;">Booked</span></div>
+            <div class="mock-row" style="margin-top:6px;"><span>Tue · 2:00pm</span><span>✔ Confirmed</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" style="background:var(--bg-alt);">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why chat365</p>
+        <h2>Built for busy small business owners</h2>
+        <p class="section-lede">You're running the business — chat365 handles the enquiries in the background.</p>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">⏱</div>
+          <h3>No More Missed Enquiries</h3>
+          <p>Most people don't leave a message when no one answers. chat365 picks up every time, so the enquiry isn't lost.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">💰</div>
+          <h3>A Fraction of Hiring</h3>
+          <p>No payroll, no rostering, no sick days. Just enquiries answered at a fraction of the cost of a receptionist.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎯</div>
+          <h3>Trained On Your Business</h3>
+          <p>Not a generic script — chat365 learns your services, tone and pricing so it sounds like part of the team.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📅</div>
+          <h3>Books Around Your Real Availability</h3>
+          <p>chat365 checks your actual calendar before offering a time — no fixed business hours to configure, just what's already free or busy.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🚀</div>
+          <h3>No Developers Needed</h3>
+          <p>We set chat365 up for you and connect your channels — nothing for you to build or configure.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔗</div>
+          <h3>Every Channel, One Assistant</h3>
+          <p>Webchat, WhatsApp, Facebook and phone all draw on the same understanding of your business — not separate tools bolted together.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" style="background:var(--bg-alt);">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Pricing</p>
+        <h2>Simple plans, no surprises</h2>
+        <p class="section-lede">Pricing placeholder — replace with the finalised chat365 plans.</p>
+      </div>
+      <div class="placeholder-notice" style="max-width:640px; margin:0 auto; text-align:center;">
+        <strong>Pricing table goes here.</strong>
+        Drop in the finalised chat365 tiers once they're confirmed.
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">FAQ</p>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="faq">
+        <div class="faq-item">
+          <h3>Will my customers know they're talking to AI?</h3>
+          <p>Yes — chat365 is upfront about it. We're not trying to trick anyone.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What happens if chat365 can't answer a question?</h3>
+          <p>It won't make things up — it takes a clear message so your team can follow up, full transcript included.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="cta-band">
+        <div>
+          <h2>Ready to stop missing enquiries?</h2>
+          <p>Get in touch, and we'll set chat365 up to start answering for you.</p>
+        </div>
+        <a class="btn btn-primary" href="mailto:hello@chat365.com.au">Get in touch</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>© <span id="year"></span> Catalysticly Pty Ltd (ABN 30 146 807 146), trading as chat365. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="mailto:hello@chat365.com.au">Contact</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+
+</body>
+</html>
