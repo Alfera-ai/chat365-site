@@ -57,4 +57,36 @@ git push -u origin main
 
 - Replace the placeholder copy, pricing section, and branding in `index.html` with real chat365 content.
 - Every future `git push` to this repo auto-deploys — no manual re-upload needed.
-- If chat365 should also demo the product live (an embedded chat widget on its own homepage), that reuses the existing `alfera-chat-widget.js` from `alfera-core/website-widget/` — needs a `Tenants` row for a `chat365` tenant with its own branding fields set. Worth doing once real content/branding is settled, not before.
+
+## Live chat widget on the site (added 2026-08-15)
+
+`index.html` now embeds the shared `alfera-chat-widget.js` at the bottom of `<body>`, with `data-tenant-id="chat365-001"`. This is the exact same widget file every Alfera/chat365 tenant uses — talking to the bubble on chat365's own site doubles as the product demo. Two things still need to happen on the backend before it actually works (can't be done from this repo/sandbox — needs your own Azure access):
+
+### 1. Add the Tenants row
+
+Azure Storage Browser → **Tenants** table → new entity:
+
+- `PartitionKey`: `website`
+- `RowKey`: `chat365-001`
+- `tenantId`: `chat365-001`
+- `businessName`: `chat365`
+- `conversationMode`: `legacy_v2`
+- `isActive`: `true` (Boolean)
+- `leadCaptureEnabled`: `true` (Boolean)
+- `websiteOrigin`: the exact origin(s) the site is served from — e.g. `https://chat365.com.au` once the custom domain is live, or the current `*.pages.dev` URL if you want the widget working before that. Comma-separate both if you want it working on both at once: `https://chat365.com.au, https://<your-project>.pages.dev`. Get this wrong (missing `https://`, trailing slash, wrong subdomain) and the widget looks broken with no visible error — see the Troubleshooting section of `Website-Channel-Onboarding-Guide.md`.
+- `brandColor`: `#2563eb` (chat365's blue, matches the site)
+- `logoUrl`: a public URL to the chat365 logo mark (square/round icon, not the wide wordmark — it gets cropped into a 56x56px circle on the chat bubble)
+- `hubspotAccessToken`: omit for now unless you want this demo tenant's enquiries pushed to a real HubSpot portal
+
+### 2. Deploy the new prompt file
+
+`function-app/prompts/chat365-001.txt` already exists in this repo (chat365's own business identity, real plan list/pricing, and explicit rules against the claims already removed from the site — no self-serve signup, no "keep your number," no configurable business hours). Since `chat365-001` is a brand-new tenantId, it needs a deploy before the backend will find it:
+
+```bash
+cd "/Users/manjuladealwis/Development/Alfera/alfera-core/function-app"
+func azure functionapp publish func-alfera-demo2 --javascript
+```
+
+### 3. Test
+
+Load the live site, click the chat bubble (bottom-right), send a message, and check the Function App's Log Stream for `Website tenant resolved: chat365-001, ...` with no `Tenant not found` errors. Full troubleshooting steps (CORS errors, branding not showing, bubble not appearing) are in `alfera-core/docs/Website-Channel-Onboarding-Guide.md`.

@@ -507,5 +507,17 @@
 
 <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 
+<!--
+  Live chat365 demo widget -- same shared widget file every chat365/Alfera
+  tenant uses, driven entirely by data-tenant-id. Talking to this bubble on
+  chat365's own site IS the product demo: it's the exact assistant a
+  customer's own customers would talk to, just representing chat365 itself.
+  Backend setup required before this works -- see chat365-site/README.md.
+-->
+<script
+  src="https://alfera.com.au/alfera-chat-widget.js"
+  data-tenant-id="chat365-001"
+></script>
+
 </body>
 </html>
