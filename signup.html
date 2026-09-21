@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign up — chat365</title>
+<style>
+  body { font-family: system-ui, -apple-system, sans-serif; max-width: 480px; margin: 60px auto; padding: 0 20px; color: #1a1a1a; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  p.sub { color: #4b5563; margin-top: 0; margin-bottom: 28px; }
+  label { display: block; font-weight: 600; margin: 16px 0 6px; font-size: 14px; }
+  input, textarea { width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px; font-family: inherit; }
+  textarea { min-height: 90px; resize: vertical; }
+  button { margin-top: 24px; width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
+  button:disabled { background: #93a3bf; cursor: not-allowed; }
+  #status { margin-top: 16px; font-size: 14px; color: #4b5563; text-align: center; }
+  #status.error { color: #b91c1c; }
+</style>
+</head>
+<body>
+
+<h1>Get your AI phone receptionist</h1>
+<p class="sub">A few details, then you'll set up payment and connect your calendar — takes about five minutes.</p>
+
+<form id="signupForm">
+  <label for="businessName">Business name</label>
+  <input type="text" id="businessName" name="businessName" required>
+
+  <label for="contactEmail">Your email</label>
+  <input type="email" id="contactEmail" name="contactEmail" required>
+
+  <label for="websiteUrl">Your website (optional)</label>
+  <input type="text" id="websiteUrl" name="websiteUrl" placeholder="e.g. www.smithplumbing.com.au">
+
+  <label for="businessDescription">What does your business do? (optional if you gave us a website)</label>
+  <textarea id="businessDescription" name="businessDescription" placeholder="e.g. Residential plumbing and hot water repairs across Melbourne's inner north"></textarea>
+  <p class="sub" style="margin-top:6px; margin-bottom:0; font-size:13px;">Give us a website, a short description, or both — we'll use whatever you provide to brief your AI receptionist.</p>
+
+  <button type="submit" id="submitButton">Continue</button>
+  <div id="status"></div>
+</form>
+
+<script>
+  // Talks directly to the shared Azure Function App, the same cross-origin
+  // pattern already used by alfera-chat-widget.js elsewhere on this site.
+  // Update this if the Function App's host ever changes.
+  const FUNCTION_APP_BASE = "https://func-alfera-demo2.azurewebsites.net";
+
+  const form = document.getElementById("signupForm");
+  const statusEl = document.getElementById("status");
+  const submitButton = document.getElementById("submitButton");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const businessDescription = document.getElementById("businessDescription").value.trim();
+    const websiteUrl = document.getElementById("websiteUrl").value.trim();
+
+    if (!businessDescription && !websiteUrl) {
+      statusEl.className = "error";
+      statusEl.textContent = "Please add a website, a short description, or both.";
+      return;
+    }
+
+    submitButton.disabled = true;
+    statusEl.className = "";
+    statusEl.textContent = "Setting things up...";
+
+    const payload = {
+      businessName: document.getElementById("businessName").value.trim(),
+      contactEmail: document.getElementById("contactEmail").value.trim(),
+      businessDescription,
+      websiteUrl
+    };
+
+    try {
+      const response = await fetch(`${FUNCTION_APP_BASE}/api/voiceSignup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong -- please try again.");
+      }
+
+      statusEl.textContent = "Taking you to payment...";
+      window.location.href = data.nextUrl;
+    } catch (error) {
+      statusEl.className = "error";
+      statusEl.textContent = error.message || "Something went wrong -- please try again.";
+      submitButton.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
