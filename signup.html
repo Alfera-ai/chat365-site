@@ -15,12 +15,20 @@
   button:disabled { background: #93a3bf; cursor: not-allowed; }
   #status { margin-top: 16px; font-size: 14px; color: #4b5563; text-align: center; }
   #status.error { color: #b91c1c; }
+
+  fieldset { border: 1px solid #d1d5db; border-radius: 8px; margin: 16px 0 6px; padding: 4px 14px 14px; }
+  legend { font-weight: 600; font-size: 14px; padding: 0 4px; }
+  .mode-option { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; }
+  .mode-option input[type="radio"] { width: auto; margin-top: 3px; flex-shrink: 0; }
+  .mode-option label { margin: 0; font-weight: 600; font-size: 14px; }
+  .mode-option p { margin: 2px 0 0; font-size: 13px; color: #6b7280; font-weight: 400; }
+  #spreadsheetShareEmailField { display: none; }
 </style>
 </head>
 <body>
 
 <h1>Get your AI phone receptionist</h1>
-<p class="sub">A few details, then you'll set up payment and connect your calendar — takes about five minutes.</p>
+<p class="sub">A few details, then you'll set up payment — takes about five minutes.</p>
 
 <form id="signupForm">
   <label for="businessName">Business name</label>
@@ -36,6 +44,39 @@
   <textarea id="businessDescription" name="businessDescription" placeholder="e.g. Residential plumbing and hot water repairs across Melbourne's inner north"></textarea>
   <p class="sub" style="margin-top:6px; margin-bottom:0; font-size:13px;">Give us a website, a short description, or both — we'll use whatever you provide to brief your AI receptionist.</p>
 
+  <fieldset id="callHandlingModeField">
+    <legend>What should your AI receptionist do with each call?</legend>
+
+    <div class="mode-option">
+      <input type="radio" id="mode-calendar" name="callHandlingMode" value="calendar_booking" checked>
+      <div>
+        <label for="mode-calendar">Book appointments on my calendar</label>
+        <p>Checks your connected Google Calendar and books the call in directly. You'll connect your calendar right after payment.</p>
+      </div>
+    </div>
+
+    <div class="mode-option">
+      <input type="radio" id="mode-email" name="callHandlingMode" value="message_email">
+      <div>
+        <label for="mode-email">Just take a message and email it to me</label>
+        <p>No calendar involved -- your receptionist collects the caller's name, number and reason for calling, and emails it to you.</p>
+      </div>
+    </div>
+
+    <div class="mode-option">
+      <input type="radio" id="mode-sheet" name="callHandlingMode" value="message_sheet">
+      <div>
+        <label for="mode-sheet">Take a message and log it to a Google Sheet</label>
+        <p>Same message-taking as above, but logged as a row in a Google Sheet we create and share with an email address you choose.</p>
+      </div>
+    </div>
+  </fieldset>
+
+  <div id="spreadsheetShareEmailField">
+    <label for="spreadsheetShareEmail">Which email should we share the spreadsheet with?</label>
+    <input type="email" id="spreadsheetShareEmail" name="spreadsheetShareEmail" placeholder="e.g. bookings@smithplumbing.com.au">
+  </div>
+
   <button type="submit" id="submitButton">Continue</button>
   <div id="status"></div>
 </form>
@@ -49,16 +90,42 @@
   const form = document.getElementById("signupForm");
   const statusEl = document.getElementById("status");
   const submitButton = document.getElementById("submitButton");
+  const spreadsheetShareEmailField = document.getElementById("spreadsheetShareEmailField");
+  const spreadsheetShareEmailInput = document.getElementById("spreadsheetShareEmail");
+
+  // Reveal the share-email field only for the spreadsheet mode -- it's
+  // meaningless for the other two, and voiceSignup.js only requires/
+  // validates it when callHandlingMode is "message_sheet" (see that file).
+  function updateSpreadsheetFieldVisibility() {
+    const selectedMode = document.querySelector('input[name="callHandlingMode"]:checked').value;
+    const showField = selectedMode === "message_sheet";
+    spreadsheetShareEmailField.style.display = showField ? "block" : "none";
+    spreadsheetShareEmailInput.required = showField;
+    if (!showField) spreadsheetShareEmailInput.value = "";
+  }
+
+  document.querySelectorAll('input[name="callHandlingMode"]').forEach((radio) => {
+    radio.addEventListener("change", updateSpreadsheetFieldVisibility);
+  });
+  updateSpreadsheetFieldVisibility();
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const businessDescription = document.getElementById("businessDescription").value.trim();
     const websiteUrl = document.getElementById("websiteUrl").value.trim();
+    const callHandlingMode = document.querySelector('input[name="callHandlingMode"]:checked').value;
+    const spreadsheetShareEmail = spreadsheetShareEmailInput.value.trim();
 
     if (!businessDescription && !websiteUrl) {
       statusEl.className = "error";
       statusEl.textContent = "Please add a website, a short description, or both.";
+      return;
+    }
+
+    if (callHandlingMode === "message_sheet" && !spreadsheetShareEmail) {
+      statusEl.className = "error";
+      statusEl.textContent = "Please add the email address to share the spreadsheet with.";
       return;
     }
 
@@ -70,7 +137,9 @@
       businessName: document.getElementById("businessName").value.trim(),
       contactEmail: document.getElementById("contactEmail").value.trim(),
       businessDescription,
-      websiteUrl
+      websiteUrl,
+      callHandlingMode,
+      ...(callHandlingMode === "message_sheet" && { spreadsheetShareEmail })
     };
 
     try {
